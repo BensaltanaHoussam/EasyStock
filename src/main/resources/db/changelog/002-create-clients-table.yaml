@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: BensaltanaHoussam
+      changes:
+        - createTable:
+            tableName: clients
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: loyalty_tier
+                  type: VARCHAR(50)
+                  defaultValue: 'BASIC'
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_orders
+                  type: INT
+                  defaultValue: '0'
+              - column:
+                  name: total_spent
+                  type: DOUBLE
+                  defaultValue: '0.0'
+              - column:
+                  name: first_order_date
+                  type: DATE
+              - column:
+                  name: last_order_date
+                  type: DATE
