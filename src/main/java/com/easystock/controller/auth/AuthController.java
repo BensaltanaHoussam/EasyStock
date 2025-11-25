@@ -1,7 +1,9 @@
 package com.easystock.controller.auth;
 
+import com.easystock.config.auth.Auth;
 import com.easystock.dto.auth.LoginRequestDto;
 import com.easystock.dto.auth.UserDto;
+import com.easystock.entity.enums.UserRole;
 import com.easystock.service.auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -45,5 +47,18 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(userDto);
+    }
+
+
+    @GetMapping("/admin-only")
+    @Auth(allowedRoles = {UserRole.ADMIN})
+    public ResponseEntity<String> getAdminData() {
+        return ResponseEntity.ok("This is a secret message for ADMINS only!");
+    }
+
+    @GetMapping("/any-user")
+    @Auth
+    public ResponseEntity<String> getAnyUserData() {
+        return ResponseEntity.ok("This is a message for any logged-in user.");
     }
 }
