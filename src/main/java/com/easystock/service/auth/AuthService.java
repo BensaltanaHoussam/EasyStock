@@ -1,4 +1,4 @@
-package com.easystock.service;
+package com.easystock.service.auth;
 
 import com.easystock.dto.auth.LoginRequestDto;
 import com.easystock.dto.auth.UserDto;
