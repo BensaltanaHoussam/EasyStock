@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6
+      author: BensaltanaHoussam
+      changes:
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_payment_order
+                    references: orders(id)
+              - column:
+                  name: payment_number
+                  type: INT
+              - column:
+                  name: amount
+                  type: DOUBLE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_method
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_date
+                  type: DATE
+              - column:
+                  name: cash_in_date
+                  type: DATE
+              - column:
+                  name: reference
+                  type: VARCHAR(255)
+              - column:
+                  name: bank
+                  type: VARCHAR(255)
+              - column:
+                  name: due_date
+                  type: DATE
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  defaultValue: 'EN_ATTENTE'
