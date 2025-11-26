@@ -1,5 +1,6 @@
 package com.easystock.entity;
 
+import com.easystock.entity.enums.PaymentMethod;
 import com.easystock.entity.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,37 +13,41 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "payments")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Payment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
+    @Column(nullable = false)
     private int paymentNumber;
 
     @Column(nullable = false)
     private double amount;
 
-    @Column(nullable = false)
-    private String paymentMethod;
-
-    private LocalDate paymentDate;
-    private LocalDate cashInDate;
-
-    // Fields specific to Cheque or Virement
-    private String reference;
-    private String bank;
-    private LocalDate dueDate;
-
-    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentStatus status = PaymentStatus.EN_ATTENTE;
+    private PaymentMethod paymentMethod;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentStatus status;
+
+    @Column(nullable = false)
+    private LocalDate paymentDate;
+
+    private LocalDate cashInDate;
+
+    // For Cheque or Transfer
+    private String reference;
+
+    // For Cheque
+    private String bank;
+    private LocalDate dueDate;
 }

@@ -1,13 +1,18 @@
 databaseChangeLog:
+  # Assuming these are the names of your previous files
   - include:
-      file: db/changelog/001-create-users-table.yaml
+      file: db/changelog/001-initial-schema.yaml # or whatever your first file is called
   - include:
-      file: db/changelog/002-create-clients-table.yaml
+      file: db/changelog/002-add-user-entity.yaml
   - include:
-      file: db/changelog/003-create-products-table.yaml
+      file: db/changelog/003-add-deleted-flag-to-product.yaml
+
+  # The next two are likely what you used for orders/order_items
   - include:
       file: db/changelog/004-create-orders-table.yaml
   - include:
       file: db/changelog/005-create-order-items-table.yaml
+
+  # This is the single, correct entry for the new payments table
   - include:
-      file: db/changelog/006-create-payments-table.yaml
+      file: db/changelog/006-add-payment-entities.yaml # <-- USE THIS LINE

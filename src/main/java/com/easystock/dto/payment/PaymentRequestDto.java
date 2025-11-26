@@ -18,7 +18,7 @@ public class PaymentRequestDto {
     @Min(value = 1, message = "Payment amount must be positive")
     private double amount;
 
-    // Optional fields depending on payment method
+
     private LocalDate paymentDate;
     private String reference; // For Cheque or Bank Transfer
     private String bank;      // For Cheque

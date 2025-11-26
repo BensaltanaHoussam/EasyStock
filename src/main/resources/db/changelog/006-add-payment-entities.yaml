@@ -1,6 +1,24 @@
 databaseChangeLog:
   - changeSet:
-      id: 6
+      id: 6-create-payment-enums
+      author: BensaltanaHoussam
+      changes:
+        - sql:
+            # We use a little trick here to create the types only if they don't already exist,
+            # which makes the script re-runnable without errors.
+            sql: |
+              DO $$
+              BEGIN
+                  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'payment_method_enum') THEN
+                      CREATE TYPE payment_method_enum AS ENUM ('ESPECE', 'CHEQUE', 'VIREMENT_BANCAIRE');
+                  END IF;
+                  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'payment_status_enum') THEN
+                      CREATE TYPE payment_status_enum AS ENUM ('EN_ATTENTE', 'ENCAISSE', 'REJETE');
+                  END IF;
+              END $$;
+
+  - changeSet:
+      id: 6-create-payments-table
       author: BensaltanaHoussam
       changes:
         - createTable:
@@ -12,6 +30,7 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+                    nullable: false
               - column:
                   name: order_id
                   type: BIGINT
@@ -22,19 +41,28 @@ databaseChangeLog:
               - column:
                   name: payment_number
                   type: INT
+                  constraints:
+                    nullable: false
               - column:
                   name: amount
-                  type: DOUBLE
+                  type: DOUBLE PRECISION
                   constraints:
                     nullable: false
               - column:
                   name: payment_method
-                  type: VARCHAR(255)
+                  type: payment_method_enum # <-- Use the ENUM type
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: payment_status_enum # <-- Use the ENUM type
                   constraints:
                     nullable: false
               - column:
                   name: payment_date
                   type: DATE
+                  constraints:
+                    nullable: false
               - column:
                   name: cash_in_date
                   type: DATE
@@ -47,7 +75,3 @@ databaseChangeLog:
               - column:
                   name: due_date
                   type: DATE
-              - column:
-                  name: status
-                  type: VARCHAR(50)
-                  defaultValue: 'EN_ATTENTE'
