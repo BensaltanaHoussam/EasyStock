@@ -1,7 +1,6 @@
 package com.easystock.dto.order;
 
 import com.easystock.dto.client.ClientResponseDto;
-import com.easystock.dto.product.ProductResponseDto;
 import com.easystock.entity.enums.OrderStatus;
 import lombok.Data;
 
@@ -16,7 +15,7 @@ public class OrderResponseDto {
     private LocalDateTime orderDate;
     private OrderStatus status;
 
-    // Financial details
+
     private double subtotal;
     private double discountAmount;
     private double taxAmount;
@@ -25,9 +24,3 @@ public class OrderResponseDto {
     private String promoCode;
 }
 
-@Data
-class OrderItemResponseDto {
-    private ProductResponseDto product;
-    private int quantity;
-    private double unitPrice;
-}
