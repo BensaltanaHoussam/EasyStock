@@ -109,6 +109,11 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + id));
 
+
+        if (order.getAmountRemaining() > 0) {
+            throw new IllegalStateException("Order cannot be confirmed because it is not fully paid. Amount remaining: " + order.getAmountRemaining());
+        }
+
         if (order.getStatus() != OrderStatus.PENDING) {
             throw new IllegalStateException("Only orders with PENDING status can be confirmed.");
         }
