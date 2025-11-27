@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 6
+      id: 6-create-payments-table
       author: BensaltanaHoussam
       changes:
         - createTable:
@@ -12,6 +12,8 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
+                    nullable: false
+
               - column:
                   name: order_id
                   type: BIGINT
@@ -19,35 +21,49 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_payment_order
                     references: orders(id)
+
               - column:
                   name: payment_number
                   type: INT
+                  constraints:
+                    nullable: false
+
               - column:
                   name: amount
-                  type: DOUBLE
+                  type: FLOAT8
                   constraints:
                     nullable: false
+
               - column:
                   name: payment_method
-                  type: VARCHAR(255)
+                  type: VARCHAR(30)
                   constraints:
                     nullable: false
+
+              - column:
+                  name: status
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+
               - column:
                   name: payment_date
                   type: DATE
+                  constraints:
+                    nullable: false
+
               - column:
                   name: cash_in_date
                   type: DATE
+
               - column:
                   name: reference
                   type: VARCHAR(255)
+
               - column:
                   name: bank
                   type: VARCHAR(255)
+
               - column:
                   name: due_date
                   type: DATE
-              - column:
-                  name: status
-                  type: VARCHAR(50)
-                  defaultValue: 'EN_ATTENTE'

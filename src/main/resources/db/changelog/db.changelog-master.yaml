@@ -10,4 +10,4 @@ databaseChangeLog:
   - include:
       file: db/changelog/005-create-order-items-table.yaml
   - include:
-      file: db/changelog/006-create-payments-table.yaml
+      file: db/changelog/006-add-payment-entities.yaml
