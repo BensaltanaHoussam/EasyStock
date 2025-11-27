@@ -44,10 +44,7 @@ public class Payment {
 
     private LocalDate cashInDate;
 
-    // For Cheque or Transfer
     private String reference;
-
-    // For Cheque
     private String bank;
     private LocalDate dueDate;
 }
