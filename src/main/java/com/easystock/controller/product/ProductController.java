@@ -7,6 +7,7 @@ import com.easystock.entity.enums.UserRole;
 import com.easystock.service.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
+@Slf4j
 public class ProductController {
 
     private final ProductService productService;
@@ -23,12 +25,16 @@ public class ProductController {
     @PostMapping
     @Auth(allowedRoles = {UserRole.ADMIN})
     public ResponseEntity<ProductResponseDto> createProduct(@RequestBody @Valid ProductRequestDto dto) {
-        return new ResponseEntity<>(productService.create(dto), HttpStatus.CREATED);
+        log.info("Request to create product with name: {}", dto.getName());
+        ProductResponseDto response = productService.create(dto);
+        log.info("Product created successfully with ID: {}", response.getId());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     @Auth(allowedRoles = {UserRole.ADMIN, UserRole.CLIENT}) // Both can view a product
     public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long id) {
+        log.info("Request to get product by ID: {}", id);
         return ResponseEntity.ok(productService.findById(id));
     }
 
@@ -37,19 +43,25 @@ public class ProductController {
     public ResponseEntity<Page<ProductResponseDto>> getAllProducts(
             Pageable pageable,
             @RequestParam(defaultValue = "false") boolean includeDeleted) {
+        log.info("Request to get all products for page: {}, includeDeleted: {}", pageable.getPageNumber(), includeDeleted);
         return ResponseEntity.ok(productService.findAll(pageable, includeDeleted));
     }
 
     @PutMapping("/{id}")
     @Auth(allowedRoles = {UserRole.ADMIN})
     public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto dto) {
-        return ResponseEntity.ok(productService.update(id, dto));
+        log.info("Request to update product with ID: {}", id);
+        ProductResponseDto response = productService.update(id, dto);
+        log.info("Product updated successfully with ID: {}", response.getId());
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     @Auth(allowedRoles = {UserRole.ADMIN})
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        log.info("Request to delete product with ID: {}", id);
         productService.delete(id);
+        log.info("Product deleted successfully with ID: {}", id);
         return ResponseEntity.noContent().build();
     }
 }
