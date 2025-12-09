@@ -4,6 +4,7 @@ import com.easystock.config.auth.Auth;
 import com.easystock.dto.product.ProductRequestDto;
 import com.easystock.dto.product.ProductResponseDto;
 import com.easystock.entity.enums.UserRole;
+import com.easystock.repository.ProductRepository;
 import com.easystock.service.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -64,4 +65,6 @@ public class ProductController {
         log.info("Product deleted successfully with ID: {}", id);
         return ResponseEntity.noContent().build();
     }
+
+
 }
