@@ -1,43 +1,132 @@
-# EasyStock API
+# 📦 EasyStock (Ex-SmartShop)
 
-EasyStock is a backend REST API for commercial business management, based on the SmartShop project requirements. It is designed for B2B distributors to manage clients, products, orders, and payments.
+EasyStock est une application web de gestion commerciale (Backend REST API) conçue pour **MicroTech Maroc**, un distributeur B2B de matériel informatique basé à Casablanca.
 
-## Core Features
+L’objectif est d’optimiser :
+- la gestion du portefeuille client (650 clients actifs),
+- la trésorerie,
+- et de garantir une traçabilité complète des événements financiers.
 
--   **Client & Loyalty Management:** Full client lifecycle management with an automatic tiered loyalty system (BASIC, SILVER, GOLD, PLATINUM).
--   **Product & Stock Management:** CRUD operations for products with real-time stock tracking and soft-delete functionality.
--   **Order Processing:** Create multi-product orders with automated calculations for loyalty discounts, promo codes, and TVA (20%).
--   **Multi-Method Payments:** Supports splitting a single invoice across multiple payment types (Cash, Cheque, Bank Transfer) and tracks the remaining balance.
--   **Role-Based Access:** Differentiates between ADMIN and CLIENT roles.
--   **Session-Based Authentication:** Simple login/logout functionality using HTTP Sessions.
+---
 
-## Tech Stack
+## ✨ Fonctionnalités Clés
 
--   **Framework:** Spring Boot 3.2.5
--   **Language:** Java 17
--   **API:** REST (JSON)
--   **Database:** PostgreSQL
--   **ORM:** Spring Data JPA / Hibernate
--   **Database Migration:** Liquibase
--   **Mapping:** MapStruct
--   **Tooling:** Maven, Lombok
+### 🧾 Gestion des Clients
+- CRUD complet
+- Suivi des statistiques (commandes totales, montant cumulé)
+- Historique des achats
 
-## How to Run
+### 🎯 Système de Fidélité Automatique
+- Niveaux : `BASIC`, `SILVER`, `GOLD`, `PLATINUM`
+- Remises progressives appliquées automatiquement
 
-1.  **Prerequisites:**
-    -   Java 17+
-    -   Maven 3.8+
-    -   PostgreSQL
+### 📦 Gestion des Produits
+- CRUD complet
+- Soft delete pour préserver l’historique des commandes
 
-2.  **Database Setup:**
-    -   Create a PostgreSQL database named `easystock_db`.
-    -   Update the database credentials in `src/main/resources/application.yaml`.
+### 🛒 Gestion des Commandes
+- Commandes multi-produits
+- Validation du stock
+- Calcul automatique (HT, remises, TVA 20%, TTC)
+- Mise à jour automatique des statistiques client
 
-3.  **Run the Application:**
-    -   Clone the repository: `git clone <your-repo-url>`
-    -   Navigate to the project directory: `cd easystock`
-    -   Run the application using Maven:
-        ```bash
-        mvn spring-boot:run
-        ```
-    -   The API will be available at `http://localhost:8080`.
+### 💳 Paiements Multi-Moyens
+- Paiements fractionnés : ESPÈCES, CHÈQUE, VIREMENT
+- Statuts : `EN_ATTENTE`, `ENCAISSÉ`, `REJETÉ`
+- Une commande ne peut être **CONFIRMED** que si elle est entièrement payée
+
+### 🔐 Matrice de Permissions
+- `ADMIN` → gestion complète
+- `CLIENT` → accès en lecture seule à ses propres données
+
+---
+
+## 🛠️ Stack Technique
+
+| Catégorie        | Technologie / Outil       | Détails |
+|------------------|----------------------------|--------|
+| Framework        | Spring Boot                 | REST API |
+| Langage          | Java 8+                     | Stream API, Java Time API |
+| Base de données  | PostgreSQL / MySQL          | Relationnelle |
+| ORM              | Spring Data JPA / Hibernate | Persistance |
+| Mapping          | MapStruct                   | Entity ↔ DTO ↔ ViewModel |
+| Utilitaires      | Lombok                      | Builder Pattern |
+| Authentification | HTTP Session                | Sans JWT |
+| Tests            | JUnit, Mockito              | Unitaires & Intégration |
+| API Testing      | Postman / Swagger           | Documentation |
+
+---
+
+## ⚙️ Configuration
+
+### 1. Base de données
+Créez une base de données avec la commande suivante :
+```sql
+CREATE DATABASE easystock_db;
+```
+
+### 2. Fichier de configuration
+Configurez le fichier `src/main/resources/application.properties` :
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/easystock_db
+spring.datasource.username=votre_utilisateur
+spring.datasource.password=votre_mot_de_passe
+
+spring.jpa.hibernate.ddl-auto=update
+```
+
+### 3. Cloner le dépôt
+```bash
+git clone https://github.com/BensaltanaHoussam/easystock.git
+cd easystock
+```
+
+### 4. Construire le projet
+```bash
+mvn clean install
+```
+
+### 5. Lancer l’application
+```bash
+mvn spring-boot:run
+```
+L'API sera disponible sur `http://localhost:8080`.
+
+---
+
+## 🔑 Endpoints de l’API
+
+👉 Une collection Postman ou une documentation Swagger est disponible dans le projet.
+
+| Catégorie | Méthode | URI                        | Description                  | Rôle           |
+|-----------|---------|----------------------------|------------------------------|----------------|
+| Auth      | POST    | `/api/auth/login`          | Connexion                    | Tous           |
+| Auth      | POST    | `/api/auth/logout`         | Déconnexion                  | Tous           |
+| Clients   | POST    | `/api/clients`             | Créer un client              | ADMIN          |
+| Clients   | GET     | `/api/clients/{id}`        | Consulter un client          | ADMIN / CLIENT |
+| Produits  | POST    | `/api/products`            | Ajouter un produit           | ADMIN          |
+| Produits  | GET     | `/api/products`            | Liste des produits           | Tous           |
+| Commandes | POST    | `/api/orders`              | Créer une commande           | ADMIN          |
+| Commandes | POST    | `/api/orders/{id}/confirm` | Confirmer une commande payée | ADMIN          |
+| Paiements | POST    | `/api/orders/{id}/payments`| Ajouter un paiement          | ADMIN          |
+
+---
+
+## 🚨 Gestion des Erreurs
+
+| Code HTTP | Description            | Exemple                    |
+|-----------|------------------------|----------------------------|
+| 400       | Bad Request            | Données invalides          |
+| 401       | Unauthorized           | Non authentifié            |
+| 403       | Forbidden              | Accès interdit             |
+| 404       | Not Found              | Ressource inexistante      |
+| 422       | Unprocessable Entity   | Règle métier violée        |
+| 500       | Internal Server Error  | Erreur interne             |
+
+---
+
+## 🧑‍💻 Auteur
+
+**HOUSSAM BENSALTANA**
+- [LinkedIn](https://www.linkedin.com/in/houssam-bensaltana/)
+- [GitHub](https://github.com/BensaltanaHoussam)
